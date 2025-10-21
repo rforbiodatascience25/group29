@@ -14,4 +14,10 @@ editor: visual
 
 ### Mille
 
+Simple calculation.
+
+```{r}
+number <- 2 + 2
+```
+
 ### Frida
