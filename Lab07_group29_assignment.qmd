@@ -54,12 +54,17 @@ pca_fit <- gravier %>%
 ```
 
 ```{r}
-pca_fit %>%
-  augment(gravier) %>% # add original dataset back in
+pca_fit |> 
+  augment(gravier) |> 
   ggplot(aes(.fittedPC1, .fittedPC2, color = early_metastasis)) +
-  geom_point(size = 1.5, alpha = 0.8) +
-  scale_color_manual(values = c(good = "#0072B2", poor = "#D55E00")) +
-  labs(title = "PCA of Gravier data", x = "PC1", y = "PC2", color = "Outcome") +
-  theme_half_open(12) + background_grid()
+  geom_point(size = 1.5, alpha = 0.4) +
+  scale_color_manual(values = c(poor = "red", good = "blue")) +
+  labs(
+    title = "PCA of Gravier data",
+    x = "PC1",
+    y = "PC2",
+    color = "Early Metastasis"
+  ) +
+  theme_minimal()
 
 ```
