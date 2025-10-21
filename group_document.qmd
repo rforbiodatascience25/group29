@@ -14,7 +14,17 @@ Hello
 
 ### Amelia
 
+```{r}
+2 * 2
+```
+
 ### Mille
+
+Simple calculation.
+
+```{r}
+number <- 2 + 2
+```
 
 ### Frida
 
