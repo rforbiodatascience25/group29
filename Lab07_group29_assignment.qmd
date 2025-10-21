@@ -41,8 +41,8 @@ The data frame is then converted to a tibble and early_metastasis is added as a 
 gravier <- gravier |>
   bind_cols() |>
   as_tibble() |>
-  mutate(y = case_when(y == "poor" ~ 1,
-                       y == "good" ~ 0)) |> 
+  mutate(y = case_when(y == "poor" ~ "poor",
+                       y == "good" ~ "good")) |> 
   relocate(early_metastasis = y) |>
   select(1:101)
 ```
