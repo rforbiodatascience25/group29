@@ -8,6 +8,12 @@ editor: visual
 
 ### Tomás
 
+#### New section: 'How to fuck everything up'
+
+```{r}
+print(Hello world)
+```
+
 ### Niels
 
 Hello
