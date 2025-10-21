@@ -12,6 +12,15 @@ editor: visual
 
 Hello
 
+New analysis
+
+```{r}
+x <- 3
+y <- 5
+
+x + y
+```
+
 ### Amelia
 
 ```{r}
