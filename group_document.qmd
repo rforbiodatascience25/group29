@@ -29,3 +29,9 @@ number <- 2 + 2
 ### Frida
 
 Hola
+
+#### New feature
+
+```{r}
+1+1
+```
