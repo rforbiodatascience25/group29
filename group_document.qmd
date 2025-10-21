@@ -24,6 +24,10 @@ Simple calculation.
 
 ```{r}
 number <- 2 + 2
+
+number2 <- 4 * 3
+
+number3 <-  12 / 3
 ```
 
 ### Frida
