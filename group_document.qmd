@@ -53,3 +53,9 @@ number3 <-  12 / 3
 ### Frida
 
 Hola
+
+#### New feature
+
+```{r}
+1+1
+```
