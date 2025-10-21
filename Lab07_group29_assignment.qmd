@@ -61,9 +61,7 @@ pca_fit |>
   scale_color_manual(values = c(poor = "red", good = "blue")) +
   labs(
     title = "PCA of Gravier data",
-    x = "PC1",
-    y = "PC2",
-    color = "Early Metastasis"
+    color = "early metastasis"
   ) +
   theme_minimal()
 
