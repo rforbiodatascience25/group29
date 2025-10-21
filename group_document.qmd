@@ -11,7 +11,7 @@ editor: visual
 #### New section: 'How to fuck everything up'
 
 ```{r}
-print(Hello world)
+print('Hello world')
 ```
 
 ### Niels
