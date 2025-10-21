@@ -12,6 +12,10 @@ editor: visual
 
 ### Amelia
 
+```{r}
+2 * 2
+```
+
 ### Mille
 
 ### Frida
