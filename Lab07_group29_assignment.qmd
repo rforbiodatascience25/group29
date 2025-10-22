@@ -18,7 +18,7 @@ library(broom)
 
 ```{r}
 
-raw_dir <- "data/_raw/"
+raw_dir <- "/data/_raw/"
 data_file <- "gravier.RData"
 data_loc <- "https://github.com/ramhiser/datamicroarray/raw/master/data/"
 
@@ -47,8 +47,10 @@ gravier <- gravier |>
   select(1:101)
 ```
 
+### Loading dataset for fitting
+
 ```{r}
-pca_fit <- gravier %>% 
+pca_fit <- gravier_clean_aug %>% 
   select(where(is.numeric)) %>% # retain only numeric columns
   prcomp(scale = TRUE) # do PCA on scaled data
 ```
