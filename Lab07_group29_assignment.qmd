@@ -11,14 +11,14 @@ editor: visual
 ```{r}
 library(tidyverse)
 library(broom)
-
+library(cowplot)
 ```
 
 ## Load data
 
 ```{r}
 
-raw_dir <- "/data/_raw/"
+raw_dir <- "data/_raw/"
 data_file <- "gravier.RData"
 data_loc <- "https://github.com/ramhiser/datamicroarray/raw/master/data/"
 
@@ -50,7 +50,21 @@ gravier <- gravier |>
 ### Loading dataset for fitting
 
 ```{r}
-pca_fit <- gravier_clean_aug %>% 
+pca_fit <- gravier %>% 
   select(where(is.numeric)) %>% # retain only numeric columns
   prcomp(scale = TRUE) # do PCA on scaled data
+```
+
+```{r}
+pca_fit |> 
+  augment(gravier) |> 
+  ggplot(aes(.fittedPC1, .fittedPC2, color = early_metastasis)) +
+  geom_point(size = 1.5, alpha = 0.4) +
+  scale_color_manual(values = c(poor = "red", good = "blue")) +
+  labs(
+    title = "PCA of Gravier data",
+    color = "early metastasis"
+  ) +
+  theme_minimal()
+
 ```
