@@ -1,14 +1,21 @@
 ---
 title: "Lab 7 Assignment: Group 29"
+subtitle: "Amalie Frøsig (s224989), Frida De los Rios (s251977), Mille Grinder (s224965), Niels Elfenbein (s225059) & Tomás García-Cardo Raskovsky (s250441)"
 format:
   html:
     embed-resources: true
 editor: visual
+editor_options: 
+  chunk_output_type: console
+bibliography: references.bib
 ---
 
 ## Load libraries
 
 ```{r}
+#| message: false
+#| warning: false
+
 library(tidyverse)
 library(broom)
 library(cowplot)
@@ -17,6 +24,8 @@ library(cowplot)
 ## Load data
 
 ```{r}
+#| message: false
+#| warning: false
 
 raw_dir <- "data/_raw/"
 data_file <- "gravier.RData"
@@ -37,6 +46,8 @@ load(file = str_c(raw_dir, data_file))
 The data frame is then converted to a tibble and early_metastasis is added as a column in the beginning.
 
 ```{r}
+#| message: false
+#| warning: false
 
 gravier <- gravier |>
   bind_cols() |>
@@ -47,26 +58,58 @@ gravier <- gravier |>
   select(1:101)
 ```
 
-#### Loading dataset for fitting
+## Analysis
+
+### PCA of the data
 
 ```{r}
-pca_fit <- gravier %>% 
-  select(where(is.numeric)) %>% # retain only numeric columns
-  prcomp(scale = TRUE) # do PCA on scaled data
+#| message: false
+#| warning: false
+
+pca_fit <- gravier |> 
+  select(where(is.numeric)) |>
+  prcomp(scale = TRUE)
 ```
 
-#### Visualization of PCA, including augmented dataset
+### Visualization of PCA, including augmented dataset
 
 ```{r}
+#| message: false
+#| warning: false
+
 pca_fit |> 
   augment(gravier) |> 
-  ggplot(aes(.fittedPC1, .fittedPC2, color = early_metastasis)) +
-  geom_point(size = 1.5, alpha = 0.4) +
-  scale_color_manual(values = c(poor = "red", good = "blue")) +
-  labs(
-    title = "PCA of Gravier data",
-    color = "early metastasis"
-  ) +
-  theme_minimal()
+  ggplot(aes(.fittedPC1, 
+             .fittedPC2, 
+             color = early_metastasis)) +
+  geom_point(size = 1.5,
+             alpha = 0.4) +
+  scale_color_manual(values = c(poor = "red", 
+                                good = "blue")) +
+  labs(title = "PCA of Gravier data",
+       color = "Early metastasis") +
+  theme_classic(base_size = 16)
 
+```
+
+### Visualization of rotation matrix
+
+### Visualization of the variance
+
+```{r}
+#| message: false
+#| warning: false
+
+pca_fit |>
+  tidy(matrix = "eigenvalues") |>
+  filter(PC <= 9) |>
+  ggplot(aes(x = PC,
+             y = percent)) +
+  geom_col(fill = "hotpink") +
+  scale_x_continuous(breaks = 1:9) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme_classic(base_size = 16) +
+  labs(title = "Variance explained by each PC",
+       x = "PC",
+       y = "Percent of variation")
 ```
