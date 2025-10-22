@@ -47,13 +47,15 @@ gravier <- gravier |>
   select(1:101)
 ```
 
-### Loading dataset for fitting
+#### Loading dataset for fitting
 
 ```{r}
 pca_fit <- gravier %>% 
   select(where(is.numeric)) %>% # retain only numeric columns
   prcomp(scale = TRUE) # do PCA on scaled data
 ```
+
+#### Visualization of PCA, including augmented dataset
 
 ```{r}
 pca_fit |> 
