@@ -92,6 +92,8 @@ pca_fit |>
 
 ```
 
+This is a representation of the first two dimensions in PCA analysis for the Gravier dataset. The datapoints are colored according to the metastastatic behavior associated with each gene. From the visualization, it can be extracted that the first dimension contains most of the variance in the data, as the data points seem to be more dispersed around the x-axis. There is no apparent difference among the two metastatic conditions.
+
 ### Visualization of rotation matrix
 
 ### Visualization of the variance
@@ -113,3 +115,5 @@ pca_fit |>
        x = "PC",
        y = "Percent of variation")
 ```
+
+This is a bar-plot representing the variance percentage contained in each PC. It easily shows that the first dimension accounts for more than half of the total variance, which was already hinted by previous visualizations.
