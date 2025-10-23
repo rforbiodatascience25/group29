@@ -10,6 +10,7 @@ editor_options:
 ---
 
 ```{r}
+library(Cairo)
 
 knitr::opts_chunk$set(
   dev = "cairo_png"
