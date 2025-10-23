@@ -9,14 +9,6 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r}
-library(Cairo)
-
-knitr::opts_chunk$set(
-  dev = "CairoPNG"
-)
-```
-
 ## Load libraries
 
 ```{r}
