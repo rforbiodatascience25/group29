@@ -19,6 +19,7 @@ bibliography: references.bib
 library(tidyverse)
 library(broom)
 library(cowplot)
+library(ggrepel)
 ```
 
 ## Load data
@@ -45,7 +46,7 @@ load(file = str_c(raw_dir, data_file))
 
 ```
 
-The data frame is then converted to a tibble and `early_metastasis` is added as the first column.
+The data frame is then converted to a tibble and `early_metastasis` is added as the first column. Only 5 of the genes are selected.
 
 ```{r}
 #| message: false
@@ -57,55 +58,9 @@ gravier <- gravier |>
   mutate(y = case_when(y == "poor" ~ "poor",
                        y == "good" ~ "good")) |> 
   relocate(early_metastasis = y) |>
-  select(1:101)
+  select(1:6)
 ```
 
-```{r}
-gravier_pca <- gravier|>
-  select(2:6)
-```
-
-```{r}
-pca_fit <- gravier_pca %>% 
-  select(where(is.numeric)) %>% # retain only numeric columns
-  prcomp(scale = TRUE) # do PCA on scaled data
-```
-
-```{r}
-pca_fit %>%
-  tidy(matrix = "rotation")|>
-  group_by(column) |> 
-  slice(1:2) |> 
-  ungroup()
-```
-
-```{r}
-library(ggplot2)
-arrow_style <- arrow(
-  angle = 30, ends = "first", type = "closed", length = grid::unit(5, "pt")
-)
-
-# plot rotation matrix
-pca_plot <- pca_fit %>%
-  tidy(matrix = "rotation") %>%
-  pivot_wider(names_from = "PC", names_prefix = "PC", values_from = "value") %>%
-  ggplot(aes(PC1, PC2)) +
-  geom_segment(xend = 0, yend = 0, arrow = arrow_style) +
-  geom_text(
-    aes(label = column),
-    hjust = 1, nudge_x = -0.01, 
-    color = "#FF0000"
-  ) +
-  xlim(-0.75, 0.01) + ylim(-0.75, 0.5) +
-  coord_fixed(ratio = 1) +
-  theme_minimal(12)
-```
-
-Here you see a PCA plot showing how the selected genes contribute to the first two principal components. Each arrow represents a gene (see labels in red). The direction and length indicates how strongly it correlates with the respective PC.
-
-```{r}
-print(pca_plot)
-```
 ## Analysis
 
 ### PCA of the data
@@ -150,6 +105,38 @@ pca_fit |>
 This is a representation of the first two dimensions in PCA analysis for the Gravier dataset. Each data point represents an observation and is colored according to the metastastatic behavior. From the visualization, it can be extracted that the first dimension contains most of the variance in the data, as the data points seem to be more dispersed around the x-axis. There is no apparent difference among the two metastatic conditions. However, this does not exclude the possibility that some individual genes show statistical differences in the expression levels between the two groups (as we saw in lab 06); it is just not the biggest contributor to overall variance in the data.
 
 ### Visualization of rotation matrix
+
+In the next part, a vector plot of the rotation matrix is created to visualize which genes contribute most to the first two principal components.
+
+```{r}
+#| message: false
+#| warning: false
+
+arrow_style <- arrow(angle = 30, 
+                     ends = "first", 
+                     type = "closed", 
+                     length = grid::unit(5, "pt"))
+
+pca_fit |>
+  tidy(matrix = "rotation") |>
+  pivot_wider(names_from = "PC", 
+              names_prefix = "PC", 
+              values_from = "value") |>
+  ggplot(aes(PC1, PC2)) +
+  geom_segment(xend = 0, 
+               yend = 0, 
+               arrow = arrow_style) +
+  geom_text(aes(label = column),
+            hjust = 1, 
+            nudge_x = -0.02, 
+            color = "hotpink") +
+  xlim(-0.75, 0.01) + 
+  ylim(-0.75, 0.5) +
+  coord_fixed(ratio = 1) +
+  theme_minimal(base_size = 16)
+```
+
+Here you see a PCA plot showing how the selected genes contribute to the first two principal components. Each arrow represents a gene (see labels in pink). The direction and length indicates how strongly it correlates with the respective PC. In this case, the gene `g3H08` contributes most to the variance of the two principal components.
 
 ### Visualization of the variance contained in each PC
 
