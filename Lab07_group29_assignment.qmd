@@ -13,7 +13,7 @@ editor_options:
 library(Cairo)
 
 knitr::opts_chunk$set(
-  dev = "cairo_png"
+  dev = "CairoPNG"
 )
 ```
 
