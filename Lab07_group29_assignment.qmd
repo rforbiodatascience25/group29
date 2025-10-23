@@ -23,6 +23,8 @@ library(cowplot)
 
 ## Load data
 
+Remember to have a folder called `data`. The folder `_raw` will be created automatically if it does not exist. The data file will only be downloaded if it is not already found in the folder.
+
 ```{r}
 #| message: false
 #| warning: false
@@ -43,7 +45,7 @@ load(file = str_c(raw_dir, data_file))
 
 ```
 
-The data frame is then converted to a tibble and early_metastasis is added as a column in the beginning.
+The data frame is then converted to a tibble and `early_metastasis` is added as the first column.
 
 ```{r}
 #| message: false
@@ -62,6 +64,8 @@ gravier <- gravier |>
 
 ### PCA of the data
 
+A PCA is performed on the data by using the function `prcom()` . As the function can only handle numeric values, only columns with numeric values are selected.
+
 ```{r}
 #| message: false
 #| warning: false
@@ -72,6 +76,8 @@ pca_fit <- gravier |>
 ```
 
 ### Visualization of PCA, including augmented dataset
+
+Firstly, a scatterplot of the observations is created with the first two principal components on the axes.
 
 ```{r}
 #| message: false
@@ -92,11 +98,13 @@ pca_fit |>
 
 ```
 
-This is a representation of the first two dimensions in PCA analysis for the Gravier dataset. The datapoints are colored according to the metastastatic behavior associated with each gene. From the visualization, it can be extracted that the first dimension contains most of the variance in the data, as the data points seem to be more dispersed around the x-axis. There is no apparent difference among the two metastatic conditions.
+This is a representation of the first two dimensions in PCA analysis for the Gravier dataset. Each data point represents an observation and is colored according to the metastastatic behavior. From the visualization, it can be extracted that the first dimension contains most of the variance in the data, as the data points seem to be more dispersed around the x-axis. There is no apparent difference among the two metastatic conditions. However, this does not exclude the possibility that some individual genes show statistical differences in the expression levels between the two groups (as we saw in lab 06); it is just not the biggest contributor to overall variance in the data.
 
 ### Visualization of rotation matrix
 
-### Visualization of the variance
+### Visualization of the variance contained in each PC
+
+Lastly, a bar plot of the principal components is created to assess how much variance each component explains.
 
 ```{r}
 #| message: false
@@ -116,4 +124,4 @@ pca_fit |>
        y = "Percent of variation")
 ```
 
-This is a bar-plot representing the variance percentage contained in each PC. It easily shows that the first dimension accounts for more than half of the total variance, which was already hinted by previous visualizations.
+This is a bar plot representing the variance percentage contained in each PC. It easily shows that the first dimension accounts for more than half of the total variance, which was already hinted by previous visualizations.
