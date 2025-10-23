@@ -1,22 +1,33 @@
 ---
 title: "Lab 7 Assignment: Group 29"
+subtitle: "Amalie Frøsig (s224989), Frida De los Rios (s251977), Mille Grinder (s224965), Niels Elfenbein (s225059) & Tomás García-Cardo Raskovsky (s250441)"
 format:
   html:
     embed-resources: true
 editor: visual
+editor_options: 
+  chunk_output_type: console
+bibliography: references.bib
 ---
 
 ## Load libraries
 
 ```{r}
+#| message: false
+#| warning: false
+
 library(tidyverse)
 library(broom)
-
+library(cowplot)
 ```
 
 ## Load data
 
+Remember to have a folder called `data`. The folder `_raw` will be created automatically if it does not exist. The data file will only be downloaded if it is not already found in the folder.
+
 ```{r}
+#| message: false
+#| warning: false
 
 raw_dir <- "data/_raw/"
 data_file <- "gravier.RData"
@@ -34,9 +45,11 @@ load(file = str_c(raw_dir, data_file))
 
 ```
 
-The data frame is then converted to a tibble and early_metastasis is added as a column in the beginning.
+The data frame is then converted to a tibble and `early_metastasis` is added as the first column.
 
 ```{r}
+#| message: false
+#| warning: false
 
 gravier <- gravier |>
   bind_cols() |>
@@ -93,3 +106,68 @@ Here you see a PCA plot showing how the selected genes contribute to the first t
 ```{r}
 print(pca_plot)
 ```
+## Analysis
+
+### PCA of the data
+
+A PCA is performed on the data by using the function `prcom()` . As the function can only handle numeric values, only columns with numeric values are selected.
+
+```{r}
+#| message: false
+#| warning: false
+
+pca_fit <- gravier |> 
+  select(where(is.numeric)) |>
+  prcomp(scale = TRUE)
+```
+
+### Visualization of PCA, including augmented dataset
+
+Firstly, a scatterplot of the observations is created with the first two principal components on the axes.
+
+```{r}
+#| message: false
+#| warning: false
+
+pca_fit |> 
+  augment(gravier) |> 
+  ggplot(aes(.fittedPC1, 
+             .fittedPC2, 
+             color = early_metastasis)) +
+  geom_point(size = 1.5,
+             alpha = 0.4) +
+  scale_color_manual(values = c(poor = "red", 
+                                good = "blue")) +
+  labs(title = "PCA of Gravier data",
+       color = "Early metastasis") +
+  theme_classic(base_size = 16)
+
+```
+
+This is a representation of the first two dimensions in PCA analysis for the Gravier dataset. Each data point represents an observation and is colored according to the metastastatic behavior. From the visualization, it can be extracted that the first dimension contains most of the variance in the data, as the data points seem to be more dispersed around the x-axis. There is no apparent difference among the two metastatic conditions. However, this does not exclude the possibility that some individual genes show statistical differences in the expression levels between the two groups (as we saw in lab 06); it is just not the biggest contributor to overall variance in the data.
+
+### Visualization of rotation matrix
+
+### Visualization of the variance contained in each PC
+
+Lastly, a bar plot of the principal components is created to assess how much variance each component explains.
+
+```{r}
+#| message: false
+#| warning: false
+
+pca_fit |>
+  tidy(matrix = "eigenvalues") |>
+  filter(PC <= 9) |>
+  ggplot(aes(x = PC,
+             y = percent)) +
+  geom_col(fill = "hotpink") +
+  scale_x_continuous(breaks = 1:9) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme_classic(base_size = 16) +
+  labs(title = "Variance explained by each PC",
+       x = "PC",
+       y = "Percent of variation")
+```
+
+This is a bar plot representing the variance percentage contained in each PC. It easily shows that the first dimension accounts for more than half of the total variance, which was already hinted by previous visualizations.
